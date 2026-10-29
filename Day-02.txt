@@ -1,0 +1,148 @@
+# Day 02: Linux Users, Groups & Permissions
+
+**Goal:** Learn how to identify users, inspect groups, and manage file permissions in Linux.
+
+## 1. User Identity Commands
+
+| Command           | Purpose                                 |
+| ----------------- | --------------------------------------- |
+| `whoami`          | Display the effective username          |
+| `id`              | Display UID, GID, and group memberships |
+| `id username`     | Inspect a specific user's identity      |
+| `groups`          | Display your groups                     |
+| `groups username` | Display a user's groups                 |
+
+Example:
+
+```bash
+whoami
+id
+groups
+```
+
+- **UID:** User ID.
+- **GID:** Primary group ID.
+- **Groups:** Groups a user belongs to.
+
+## 2. Linux Users and Groups
+
+Linux uses users and groups to control access to files and system resources.
+
+- **Root user:** Administrative account, normally UID `0`.
+- **Regular user:** Used for everyday tasks.
+- **Service user:** Runs applications or services with restricted permissions.
+- **Group:** Allows multiple users to share access permissions.
+
+Useful commands:
+
+```bash
+sudo groupadd developers
+sudo usermod -aG developers username
+getent group developers
+```
+
+Replace `username` with the actual user account.
+
+**Security principle:** Give each user or service only the permissions it needs (Least Privilege).
+
+## 3. Understanding File Permissions
+
+View permissions:
+
+```bash
+ls -l
+```
+
+Example:
+
+```text
+-rwxr-xr--
+```
+
+The first character represents the file type. The remaining nine characters represent permissions.
+
+| Class | Meaning |
+| ----- | ------- |
+| `u`   | Owner   |
+| `g`   | Group   |
+| `o`   | Others  |
+
+| Permission | Value | Meaning |
+| ---------- | ----: | ------- |
+| `r`        |     4 | Read    |
+| `w`        |     2 | Write   |
+| `x`        |     1 | Execute |
+
+For directories, `x` allows traversal, while `r` allows listing directory entries.
+
+## 4. `chmod` — Change Permissions
+
+### Symbolic mode
+
+```bash
+chmod u+x script.sh
+chmod g-w notes.txt
+chmod o=r notes.txt
+chmod u=rwx,g=rx,o=r script.sh
+```
+
+| Operator | Meaning           |
+| -------- | ----------------- |
+| `+`      | Add permission    |
+| `-`      | Remove permission |
+| `=`      | Set permissions   |
+
+### Numeric mode
+
+Add permission values to calculate each digit.
+
+| Command                 | Owner                | Group         | Others        |
+| ----------------------- | -------------------- | ------------- | ------------- |
+| `chmod 644 file.txt`    | Read, write          | Read          | Read          |
+| `chmod 755 script.sh`   | Read, write, execute | Read, execute | Read, execute |
+| `chmod 600 secret.txt`  | Read, write          | None          | None          |
+| `chmod 700 private_dir` | Full permissions     | None          | None          |
+
+Examples:
+
+```bash
+touch notes.txt script.sh
+chmod 644 notes.txt
+chmod 755 script.sh
+ls -l
+```
+
+**Remember:** `chmod` changes permissions; `chown` changes ownership. Avoid `chmod 777` as a quick fix because it grants all three permissions to everyone.
+
+## 5. Practice Task
+
+```bash
+mkdir -p ~/linux-permission-practice
+cd ~/linux-permission-practice
+
+touch notes.txt script.sh
+
+whoami
+id
+groups
+
+chmod 644 notes.txt
+chmod 755 script.sh
+
+ls -l
+```
+
+Observe the permission strings and try adding or removing execute permission:
+
+```bash
+chmod u-x script.sh
+chmod u+x script.sh
+```
+
+## 6. Key Takeaways
+
+- [ ] Identify users with `whoami` and `id`.
+- [ ] Inspect group memberships with `groups`.
+- [ ] Understand owner, group, and others.
+- [ ] Change permissions using symbolic and numeric `chmod`.
+- [ ] Apply the principle of least privilege.
